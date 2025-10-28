@@ -69,6 +69,7 @@ dependencies {
 
     // DataStore Preferences
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.compose.runtime)
 
     //Testing
     testImplementation(libs.junit)
