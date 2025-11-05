@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import com.example.hxhwiki.view.home.HomeScreen
 import com.example.hxhwiki.view.home.HomeViewModel
 import com.example.hxhwiki.view.home.screens.NenScreen
+import com.example.hxhwiki.view.home.screens.NenDetailScreen
 
 
 @Composable
@@ -26,6 +27,14 @@ fun NavigationWrapper() {
         // Nueva pantalla NenScreen
         composable<NenScreen> {
             NenScreen(navController = navController)
+        }
+
+        composable<NenDetailScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<NenDetailScreen>()
+            NenDetailScreen(
+                nenTitle = args.nenType, // usamos el valor del parámetro
+                navController = navController
+            )
         }
 
     }

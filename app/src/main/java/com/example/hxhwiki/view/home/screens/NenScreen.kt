@@ -3,10 +3,14 @@ package com.example.hxhwiki.view.home.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
@@ -23,12 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hxhwiki.view.coreNavigation.Home
-import com.example.hxhwiki.view.coreNavigation.conjurationScreen
-import com.example.hxhwiki.view.coreNavigation.emissionScreen
-import com.example.hxhwiki.view.coreNavigation.enhancementScreen
-import com.example.hxhwiki.view.coreNavigation.manipulationScreen
-import com.example.hxhwiki.view.coreNavigation.specializationScreen
-import com.example.hxhwiki.view.coreNavigation.transmutationScreen
+import com.example.hxhwiki.view.coreNavigation.NenDetailScreen
 
 
 @Composable
@@ -48,6 +47,7 @@ fun NenScreen(navController: NavController) {
 
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize()
+                    .padding(horizontal = 32.dp, vertical = 40.dp)
 
             ) {
                 val (
@@ -57,7 +57,7 @@ fun NenScreen(navController: NavController) {
                     enhKanji, transKanji, emisKanji, maniKanji, conjKanji, specKanji
                 ) = createRefs()
 
-                val circleSize = 90.dp
+                val circleSize = 75.dp
 
 
 
@@ -72,7 +72,9 @@ fun NenScreen(navController: NavController) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         },
-                    onClick = { navController.navigate(enhancementScreen) }
+                    onClick = { navController.navigate(NenDetailScreen("Enhancement")) }
+
+
                 )
 
                 Text(
@@ -96,7 +98,10 @@ fun NenScreen(navController: NavController) {
                             top.linkTo(enhancement.bottom, margin = 40.dp)
                             end.linkTo(enhancement.start, margin = 60.dp)
                         },
-                    onClick = { navController.navigate(emissionScreen) }
+                    onClick = { navController.navigate(NenDetailScreen("Emission")) }
+
+
+
                 )
 
                 Text(
@@ -120,7 +125,10 @@ fun NenScreen(navController: NavController) {
                             top.linkTo(enhancement.bottom, margin = 40.dp)
                             start.linkTo(enhancement.end, margin = 60.dp)
                         },
-                    onClick = { navController.navigate(transmutationScreen) }
+                    onClick = { navController.navigate(NenDetailScreen("Transmutation")) }
+
+
+
                 )
 
                 Text(
@@ -132,6 +140,7 @@ fun NenScreen(navController: NavController) {
                         start.linkTo(transmutation.start)
                         end.linkTo(transmutation.end)
                     }
+
                 )
 
                 // --- SPECIALIZATION ---
@@ -145,7 +154,10 @@ fun NenScreen(navController: NavController) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         },
-                    onClick = { navController.navigate(specializationScreen) }
+                    onClick = { navController.navigate(NenDetailScreen("Specialization")) }
+
+
+
                 )
 
                 Text(
@@ -169,7 +181,10 @@ fun NenScreen(navController: NavController) {
                             top.linkTo(emission.bottom, margin = 80.dp)
                             end.linkTo(specialization.start, margin = 60.dp)
                         },
-                    onClick = { navController.navigate(manipulationScreen) }
+                    onClick = { navController.navigate(NenDetailScreen("Manipulation")) }
+
+
+
                 )
 
                 Text(
@@ -193,7 +208,10 @@ fun NenScreen(navController: NavController) {
                             top.linkTo(transmutation.bottom, margin = 80.dp)
                             start.linkTo(specialization.end, margin = 60.dp)
                         },
-                    onClick = { navController.navigate(conjurationScreen) },
+                    onClick = { navController.navigate(NenDetailScreen("Conjuration")) }
+
+
+
 
                 )
 
@@ -223,23 +241,20 @@ fun NenScreen(navController: NavController) {
             }
         }
 
-        Card(
-            shape = CircleShape,
+        // --- Botón de volver ---
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(
+            onClick = { navController.navigate(Home) },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
             modifier = Modifier
-                .size(90.dp)
                 .padding(16.dp)
-                .clickable { navController.navigate(Home) },
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.Gray)
         ) {
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "🏠",
-                    fontSize = 50.sp
-                )
-            }
+            Text(
+                text = "⬅ Volver",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }

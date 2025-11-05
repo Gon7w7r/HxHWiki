@@ -25,4 +25,8 @@ object manipulationScreen
 object conjurationScreen
 
 @Serializable
+data class NenDetailScreen(val nenType: String)
+
+
+@Serializable
 data class LeccionTreceDetalle(val nombre: String, val edad: Int)
