@@ -20,7 +20,21 @@ object NenData {
             description = "Los Enhancers fortalecen sus habilidades físicas y ataques. Se caracterizan por su determinación y espíritu.",
             users = listOf(
                 NenUser("Gon Freecss", R.drawable.gonactual),
-                NenUser("Uvogin", R.drawable.uvogin)
+                NenUser("Uvogin", R.drawable.uvogin),
+                NenUser("Gido", R.drawable.gido),
+                NenUser("Palm Siberia", R.drawable.palm),
+                NenUser("Isaac Netero", R.drawable.netero),
+                NenUser("Phinks", R.drawable.phinks),
+                NenUser("Maha Zoldyck", R.drawable.maha),
+                NenUser("Wing", R.drawable.wing),
+                NenUser("Nobunaga", R.drawable.nobunaga),
+                NenUser("Menthunthuyoupi", R.drawable.menthuthuyoupi),
+                NenUser("Tsezguerra", R.drawable.tsezguerra),
+                NenUser("Rabid Dog", R.drawable.rabiddog),
+
+
+
+
             )
         ),
         NenType(
