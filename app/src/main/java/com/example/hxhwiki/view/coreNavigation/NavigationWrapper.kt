@@ -9,6 +9,7 @@ import com.example.hxhwiki.view.home.HomeScreen
 import com.example.hxhwiki.view.home.HomeViewModel
 import com.example.hxhwiki.view.home.screens.NenScreen
 import com.example.hxhwiki.view.home.screens.NenDetailScreen
+import com.example.hxhwiki.view.home.screens.UserDetailScreen
 
 
 @Composable
@@ -36,6 +37,18 @@ fun NavigationWrapper() {
                 navController = navController
             )
         }
+
+
+        composable<UserDetailScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<UserDetailScreen>()
+            UserDetailScreen(
+                name = args.userName,
+                navController = navController
+            )
+        }
+
+
+
 
     }
 }

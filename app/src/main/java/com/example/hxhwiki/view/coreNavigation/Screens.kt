@@ -26,6 +26,9 @@ object conjurationScreen
 
 @Serializable
 data class NenDetailScreen(val nenType: String)
+@Serializable
+data class UserDetailScreen(val userName: String)
+
 
 
 @Serializable
