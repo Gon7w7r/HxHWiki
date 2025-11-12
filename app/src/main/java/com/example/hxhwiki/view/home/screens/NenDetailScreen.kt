@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,18 +18,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.hxhwiki.data.NenData
 import com.example.hxhwiki.view.coreNavigation.NenScreen
+import com.example.hxhwiki.view.home.screens.nenDetailData.NenViewModel
 
 @Composable
 fun NenDetailScreen(
     nenTitle: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: NenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    // Buscamos el tipo de Nen correspondiente
-    val nenType = NenData.nenTypes.find { it.title == nenTitle }
+    val nenType by viewModel.selectedNen.collectAsState()
 
-    // Si no existe, mostramos mensaje
+    // Cargar al entrar
+    LaunchedEffect(nenTitle) {
+        viewModel.loadNenByTitle(nenTitle)
+    }
+
+    // Si no hay datos todavía
     if (nenType == null) {
         Box(
             modifier = Modifier
@@ -37,40 +42,37 @@ fun NenDetailScreen(
                 .background(Color.Black),
             contentAlignment = Alignment.Center
         ) {
-            Text("Tipo de Nen no encontrado", color = Color.White)
+            Text("Cargando...", color = Color.White)
         }
         return
     }
 
-    val scrollState = rememberScrollState()
-
+    // --- UI principal ---
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- Título ---
+        // Título del tipo de Nen
         Text(
-            text = nenType.title,
+            text = nenType!!.title,
             color = Color.White,
             fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 12.dp)
+            fontWeight = FontWeight.Bold
         )
 
-        // --- Descripción ---
+        // Descripción
         Text(
-            text = nenType.description,
+            text = nenType!!.description,
             color = Color(0xFFB0B0B0),
             fontSize = 16.sp,
-            lineHeight = 22.sp,
-            modifier = Modifier.padding(bottom = 24.dp)
+            lineHeight = 22.sp
         )
 
-        // --- Subtítulo ---
+        // Subtítulo
         Text(
             text = "Personajes que usan este tipo:",
             color = Color.White,
@@ -78,22 +80,22 @@ fun NenDetailScreen(
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(bottom = 12.dp)
+                .padding(top = 16.dp)
         )
 
-        // --- Lista de personajes con imagen ---
-        nenType.users.forEach { user ->
+        // Lista de personajes
+        nenType!!.users.forEach { user ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 6.dp)
                     .height(80.dp)
                     .clickable {
-                        navController.navigate(com.example.hxhwiki.view.coreNavigation.UserDetailScreen(user.name))
+                        navController.navigate(
+                            com.example.hxhwiki.view.coreNavigation.UserDetailScreen(user.name)
+                        )
                     },
-
-
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
                 elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
             ) {
                 Row(
@@ -120,29 +122,18 @@ fun NenDetailScreen(
             }
         }
 
-        // --- Botón de volver ---
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = { navController.navigate(NenScreen) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 16.dp)
+            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
         ) {
-            Text(
-                text = "⬅ Volver",
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+            Text("⬅ Volver", color = Color.White)
         }
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun NenDetailScreenPreview() {
-    NenDetailScreen(nenTitle = "Transmutation",navController = rememberNavController())
+    NenDetailScreen(nenTitle = "Transmutation", navController = rememberNavController())
 }

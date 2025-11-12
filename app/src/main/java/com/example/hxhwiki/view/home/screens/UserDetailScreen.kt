@@ -1,15 +1,16 @@
 package com.example.hxhwiki.view.home.screens
 
-import com.example.hxhwiki.view.home.screens.userDetailData.UserData
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -19,127 +20,111 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.hxhwiki.R
-import androidx.navigation.compose.rememberNavController
+import com.example.hxhwiki.view.home.screens.userDetailData.UserDetailViewModel
+
 @Composable
 fun UserDetailScreen(
     name: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: UserDetailViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val character = UserData.characters.find { it.name == name }
+    val character by viewModel.selectedCharacter.collectAsState()
 
+    // Carga el personaje
+    LaunchedEffect(name) {
+        viewModel.loadCharacterByName(name)
+    }
+
+    // Pantalla de carga
     if (character == null) {
-        Text("Personaje no encontrado", color = Color.White)
+        Box(
+            modifier = Modifier.fillMaxSize().background(Color.Black),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Cargando personaje...", color = Color.White)
+        }
         return
     }
 
-    Box(
+    // === Diseño de ficha ===
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
+            .background(Color.Black)
+            .verticalScroll(rememberScrollState())
+            .padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Box(
+        // Imagen del personaje
+        Image(
+            painter = painterResource(id = character!!.imageRes),
+            contentDescription = character!!.name,
             modifier = Modifier
-                .width(270.dp)
-                .height(450.dp)
-        ) {
+                .size(240.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.DarkGray),
+            contentScale = ContentScale.Crop
+        )
 
-            // Imagen plantilla (fondo)
-            Image(
-                painter = painterResource(id = R.drawable.huntercard),
-                contentDescription = "Hunter Card",
-                modifier = Modifier.fillMaxSize()
-            )
+        Spacer(modifier = Modifier.height(20.dp))
 
+        // Nombre
+        Text(
+            text = character!!.name,
+            color = Color.White,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
 
+        Divider(
+            color = Color(0xFF444444),
+            thickness = 1.dp,
+            modifier = Modifier.padding(vertical = 10.dp)
+        )
 
-            // Imagen del personaje en el recuadro blanco
-            Image(
-                painter = painterResource(id = character.imageRes),
-                contentDescription = character.name,
-                modifier = Modifier
-                    .width(186.dp)
-                    .height(144.dp)
-                    .align(Alignment.TopCenter)
-                    .offset(y = 30.dp),
-                        contentScale = ContentScale.FillBounds
+        // Datos personales
+        InfoRow(label = "Edad", value = "${character!!.age}")
+        InfoRow(label = "Origen", value = character!!.origin)
+        InfoRow(label = "Poder", value = character!!.power)
+        InfoRow(label = "Objetivo", value = character!!.goal)
 
-            )
-
-            // === CAMPOS DE INFORMACIÓN ===
-
-            Text(
-                text = "Nombre: ${character.name}",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(x = 28.dp, y = 295.dp)
-            )
-
-            Text(
-                text = "Edad: ${character.age}",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(x = 25.dp, y = 340.dp)
-            )
-
-            Text(
-                text = "Origen: ${character.origin}",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(x = 25.dp, y = 366.dp)
-            )
-
-            Text(
-                text = "Poder: ${character.power}",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(x = 25.dp, y = 392.dp)
-            )
-
-            Text(
-                text = "Objetivo: ${character.goal}",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(x = 25.dp, y = 415.dp)
-            )
-        }
+        Spacer(modifier = Modifier.height(30.dp))
 
         // Botón volver
         Button(
             onClick = { navController.popBackStack() },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 40.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2C2C2C)),
+            modifier = Modifier.fillMaxWidth(0.6f)
         ) {
-            Text("⬅ Volver", color = Color.White)
+            Text("⬅ Volver", color = Color.White, fontSize = 16.sp)
         }
     }
 }
 
+@Composable
+private fun InfoRow(label: String, value: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+    ) {
+        Text(
+            text = label,
+            color = Color(0xFFAAAAAA),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            text = value,
+            color = Color.White,
+            fontSize = 16.sp,
+            lineHeight = 20.sp
+        )
+    }
+}
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 fun UserDetailScreenPreview() {
-    UserDetailScreen(
-        name = "Hisoka Morow",
-        navController = rememberNavController()
-    )
+    UserDetailScreen(name = "Hisoka Morow", navController = rememberNavController())
 }
