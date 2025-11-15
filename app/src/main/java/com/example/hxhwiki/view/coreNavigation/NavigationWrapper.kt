@@ -9,6 +9,7 @@ import com.example.hxhwiki.view.home.HomeScreen
 import com.example.hxhwiki.view.home.HomeViewModel
 import com.example.hxhwiki.view.home.screens.NenScreen
 import com.example.hxhwiki.view.home.screens.NenDetailScreen
+import com.example.hxhwiki.view.home.screens.TriviaScreen.TriviaScreen
 import com.example.hxhwiki.view.home.screens.UserDetailScreen
 
 
@@ -28,6 +29,11 @@ fun NavigationWrapper() {
         // Nueva pantalla NenScreen
         composable<NenScreen> {
             NenScreen(navController = navController)
+        }
+
+        // Nueva pantalla NenScreen
+        composable<TriviaScreen> {
+            TriviaScreen(navController = navController)
         }
 
         composable<NenDetailScreen> { backStackEntry ->
