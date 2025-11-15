@@ -1,5 +1,12 @@
 package com.example.hxhwiki.view.home.screens.TriviaScreen
 
+import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +44,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.hxhwiki.view.home.screens.TriviaScreen.ResultScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -127,6 +134,12 @@ fun QuestionScreen(
     totalQuestions: Int,
     onAnswerSelected: (Int) -> Unit
 ) {
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -136,51 +149,69 @@ fun QuestionScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Indicador de progreso
-        Text(
-            text = "Pregunta $questionNumber/$totalQuestions",
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = Color(0xFFAAAAAA)
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(500)) +
+                    slideInVertically(animationSpec = tween(500))
+        ) {
+            Text(
+                text = "Pregunta $questionNumber/$totalQuestions",
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = Color(0xFFAAAAAA)
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Nivel de dificultad
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(pregunta.nivelColor, MaterialTheme.shapes.medium)
-                .padding(vertical = 8.dp, horizontal = 16.dp),
-            contentAlignment = Alignment.Center
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(500, delayMillis = 200)) +
+                    slideInVertically(animationSpec = tween(500, delayMillis = 200))
         ) {
-            Text(
-                text = "Nivel: ${pregunta.nivel}",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(pregunta.nivelColor, MaterialTheme.shapes.medium)
+                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Nivel: ${pregunta.nivel}",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 )
-            )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Pregunta
-        Text(
-            text = pregunta.pregunta,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                lineHeight = 28.sp
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(500, delayMillis = 400)) +
+                    slideInVertically(animationSpec = tween(500, delayMillis = 400))
+        ) {
+            Text(
+                text = pregunta.pregunta,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 28.sp
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Opciones de respuesta
+        // Opciones de respuesta con animación escalonada
         pregunta.opciones.forEachIndexed { index, opcion ->
             // Colores bonitos para cada opción
             val buttonColors = listOf(
@@ -192,24 +223,34 @@ fun QuestionScreen(
 
             val (backgroundColor, textColor) = buttonColors[index]
 
-            Button(
-                onClick = { onAnswerSelected(index) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = backgroundColor,  // ← Color de fondo
-                    contentColor = textColor           // ← Color del texto
-                )
+            // Cada opción aparece con un delay diferente
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(animationSpec = tween(400, delayMillis = 600 + index * 100)) +
+                        slideInHorizontally(
+                            initialOffsetX = { -100 },
+                            animationSpec = tween(400, delayMillis = 600 + index * 100)
+                        )
             ) {
-                Text(
-                    text = "${'a' + index}) $opcion",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    textAlign = TextAlign.Center
-                )
+                Button(
+                    onClick = { onAnswerSelected(index) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = backgroundColor,
+                        contentColor = textColor
+                    )
+                ) {
+                    Text(
+                        text = "${'a' + index}) $opcion",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }
@@ -230,6 +271,14 @@ fun ResultScreen(
         else -> "¡Sigue practicando!"
     }
 
+    // Estado para controlar las animaciones
+    var isVisible by remember { mutableStateOf(false) }
+
+    // Activar animación después de que el componente se monte
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -237,76 +286,125 @@ fun ResultScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "¡Trivia Completada!",
-            style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            ),
-            textAlign = TextAlign.Center
-        )
+        // Título - aparece primero
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(800)) +
+                    slideInVertically(
+                        initialOffsetY = { fullHeight -> fullHeight / 2 },
+                        animationSpec = tween(800)
+                    )
+        ) {
+            Text(
+                text = "¡Trivia Completada!",
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
+                textAlign = TextAlign.Center
+            )
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Text(
-            text = "$puntaje/$totalPreguntas",
-            style = MaterialTheme.typography.displayMedium.copy(
-                fontWeight = FontWeight.Black,
-                color = Color(0xFF4CAF50)
-            )
-        )
-
-        Text(
-            text = "(${percentage.toInt()}%)",
-            style = MaterialTheme.typography.titleLarge.copy(
-                color = Color(0xFFAAAAAA)
-            )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = resultText,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        Button(
-            onClick = onRestart,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF4CAF50)
-            )
+        // Puntaje - aparece segundo
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(600, delayMillis = 300)) +
+                    slideInVertically(
+                        initialOffsetY = { fullHeight -> fullHeight / 4 },
+                        animationSpec = tween(600, delayMillis = 300)
+                    )
         ) {
             Text(
-                text = "Jugar de Nuevo",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold
+                text = "$puntaje/$totalPreguntas",
+                style = MaterialTheme.typography.displayMedium.copy(
+                    fontWeight = FontWeight.Black,
+                    color = Color(0xFF4CAF50)
                 )
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = onExit,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF757575)
-            )
+        // Porcentaje - aparece tercero
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(400, delayMillis = 600))
         ) {
             Text(
-                text = "Salir",
-                style = MaterialTheme.typography.titleMedium
+                text = "(${percentage.toInt()}%)",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = Color(0xFFAAAAAA)
+                )
             )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Resultado - aparece cuarto
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(500, delayMillis = 900)) +
+                    slideInVertically(
+                        initialOffsetY = { 50 },
+                        animationSpec = tween(500, delayMillis = 900)
+                    )
+        ) {
+            Text(
+                text = resultText,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        // Botones - aparecen últimos
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn(animationSpec = tween(500, delayMillis = 1200))
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = onRestart,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF4CAF50)
+                    )
+                ) {
+                    Text(
+                        text = "Jugar de Nuevo",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onExit,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF757575)
+                    )
+                ) {
+                    Text(
+                        text = "Salir",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
         }
     }
 }
+
+
 
 data class TriviaQuestion(
     val nivel: String,
@@ -316,7 +414,7 @@ data class TriviaQuestion(
     val respuestaCorrecta: Int
 )
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun TriviaScreenPreview() {
     TriviaScreen(navController = rememberNavController())
