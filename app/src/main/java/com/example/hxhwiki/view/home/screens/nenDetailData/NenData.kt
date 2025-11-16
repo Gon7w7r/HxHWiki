@@ -15,6 +15,8 @@ data class NenType(
 
 object NenData {
     //Usuarios de la lista nen
+
+    //lista nen
     val nenTypes = listOf(
         NenType(
             title = "Enhancement",
