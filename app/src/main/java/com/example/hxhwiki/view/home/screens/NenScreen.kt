@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,24 +30,30 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hxhwiki.view.coreNavigation.Home
 import com.example.hxhwiki.view.coreNavigation.NenDetailScreen
 
-
 @Composable
+
 fun NenScreen(navController: NavController) {
 
+    val bg = MaterialTheme.colorScheme.surfaceContainerHighest
+    val onBg = MaterialTheme.colorScheme.onSurface
+    val primary = MaterialTheme.colorScheme.primary
+    val onPrimary = MaterialTheme.colorScheme.onPrimary
 
     Scaffold(
-        containerColor = Color.Black
+        containerColor = bg
     ) { padding ->
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .background(Color.Black),
+                .background(bg),
             contentAlignment = Alignment.Center
         ) {
 
             ConstraintLayout(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .padding(horizontal = 32.dp, vertical = 40.dp)
 
             ) {
@@ -59,12 +66,11 @@ fun NenScreen(navController: NavController) {
 
                 val circleSize = 75.dp
 
+                // =============== CÍRCULOS NEN (COLORES ORIGINALES) ===============
 
-
-                // --- ENHANCEMENT (arriba, centrado) ---
                 NenCircle(
                     text = "強",
-                    color = Color(0xFFDA3B3B),
+                    color = Color(0xFFDA3B3B),    // Enhancement red
                     modifier = Modifier
                         .size(circleSize)
                         .constrainAs(enhancement) {
@@ -73,13 +79,11 @@ fun NenScreen(navController: NavController) {
                             end.linkTo(parent.end)
                         },
                     onClick = { navController.navigate(NenDetailScreen("Enhancement")) }
-
-
                 )
 
                 Text(
                     text = "Enhancement",
-                    color = Color.White,
+                    color = onBg,
                     fontSize = 15.sp,
                     modifier = Modifier.constrainAs(enhKanji) {
                         bottom.linkTo(enhancement.top, margin = 8.dp)
@@ -88,10 +92,9 @@ fun NenScreen(navController: NavController) {
                     }
                 )
 
-                // --- EMISSION ---
                 NenCircle(
                     text = "放",
-                    color = Color(0xFFFFB347),
+                    color = Color(0xFFFFB347),    // Emission orange
                     modifier = Modifier
                         .size(circleSize)
                         .constrainAs(emission) {
@@ -99,14 +102,11 @@ fun NenScreen(navController: NavController) {
                             end.linkTo(enhancement.start, margin = 60.dp)
                         },
                     onClick = { navController.navigate(NenDetailScreen("Emission")) }
-
-
-
                 )
 
                 Text(
                     text = "Emission",
-                    color = Color.White,
+                    color = onBg,
                     fontSize = 15.sp,
                     modifier = Modifier.constrainAs(emisKanji) {
                         bottom.linkTo(emission.top, margin = 8.dp)
@@ -115,10 +115,9 @@ fun NenScreen(navController: NavController) {
                     }
                 )
 
-                // --- TRANSMUTATION ---
                 NenCircle(
                     text = "変",
-                    color = Color(0xFF0023FF),
+                    color = Color(0xFF0023FF),    // Transmutation blue
                     modifier = Modifier
                         .size(circleSize)
                         .constrainAs(transmutation) {
@@ -126,27 +125,22 @@ fun NenScreen(navController: NavController) {
                             start.linkTo(enhancement.end, margin = 60.dp)
                         },
                     onClick = { navController.navigate(NenDetailScreen("Transmutation")) }
-
-
-
                 )
 
                 Text(
                     text = "Transmutation",
-                    color = Color.White,
+                    color = onBg,
                     fontSize = 15.sp,
                     modifier = Modifier.constrainAs(transKanji) {
                         bottom.linkTo(transmutation.top, margin = 8.dp)
                         start.linkTo(transmutation.start)
                         end.linkTo(transmutation.end)
                     }
-
                 )
 
-                // --- SPECIALIZATION ---
                 NenCircle(
                     text = "特",
-                    color = Color(0xFF6A00A4),
+                    color = Color(0xFF6A00A4),    // Specialization purple
                     modifier = Modifier
                         .size(circleSize)
                         .constrainAs(specialization) {
@@ -155,14 +149,11 @@ fun NenScreen(navController: NavController) {
                             end.linkTo(parent.end)
                         },
                     onClick = { navController.navigate(NenDetailScreen("Specialization")) }
-
-
-
                 )
 
                 Text(
                     text = "Specialization",
-                    color = Color.White,
+                    color = onBg,
                     fontSize = 15.sp,
                     modifier = Modifier.constrainAs(specKanji) {
                         bottom.linkTo(specialization.top, margin = 8.dp)
@@ -171,10 +162,9 @@ fun NenScreen(navController: NavController) {
                     }
                 )
 
-                // --- MANIPULATION ---
                 NenCircle(
                     text = "操",
-                    color = Color(0xFF3FB905),
+                    color = Color(0xFF3FB905),    // Manipulation green
                     modifier = Modifier
                         .size(circleSize)
                         .constrainAs(manipulation) {
@@ -182,14 +172,11 @@ fun NenScreen(navController: NavController) {
                             end.linkTo(specialization.start, margin = 60.dp)
                         },
                     onClick = { navController.navigate(NenDetailScreen("Manipulation")) }
-
-
-
                 )
 
                 Text(
                     text = "Manipulation",
-                    color = Color.White,
+                    color = onBg,
                     fontSize = 15.sp,
                     modifier = Modifier.constrainAs(maniKanji) {
                         bottom.linkTo(manipulation.top, margin = 8.dp)
@@ -198,10 +185,9 @@ fun NenScreen(navController: NavController) {
                     }
                 )
 
-                // --- CONJURATION ---
                 NenCircle(
                     text = "具",
-                    color = Color(0xFF656565),
+                    color = Color(0xFF656565),    // Conjuration gray
                     modifier = Modifier
                         .size(circleSize)
                         .constrainAs(conjuration) {
@@ -209,15 +195,11 @@ fun NenScreen(navController: NavController) {
                             start.linkTo(specialization.end, margin = 60.dp)
                         },
                     onClick = { navController.navigate(NenDetailScreen("Conjuration")) }
-
-
-
-
                 )
 
                 Text(
                     text = "Conjuration",
-                    color = Color.White,
+                    color = onBg,
                     fontSize = 15.sp,
                     modifier = Modifier.constrainAs(conjKanji) {
                         bottom.linkTo(conjuration.top, margin = 8.dp)
@@ -226,10 +208,9 @@ fun NenScreen(navController: NavController) {
                     }
                 )
 
-                // --- KANJI CENTRAL (entre enhancement y specialization) ---
                 Text(
                     text = "発",
-                    color = Color.White,
+                    color = onBg,
                     fontSize = 64.sp,
                     modifier = Modifier.constrainAs(centerKanji) {
                         top.linkTo(enhancement.bottom)
@@ -241,23 +222,24 @@ fun NenScreen(navController: NavController) {
             }
         }
 
-        // --- Botón de volver ---
-        Spacer(modifier = Modifier.height(24.dp))
+        // ----------- BOTÓN VOLVER (USANDO EL TEMA) -----------
         Button(
             onClick = { navController.navigate(Home) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
-            modifier = Modifier
-                .padding(16.dp)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = primary,
+                contentColor = onPrimary
+            ),
+            modifier = Modifier.padding(16.dp)
         ) {
             Text(
                 text = "⬅ Volver",
-                color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
         }
     }
 }
+
 
 
 

@@ -30,31 +30,44 @@ fun UserDetailScreen(
 ) {
     val character by viewModel.selectedCharacter.collectAsState()
 
-    // Carga el personaje
+    // Cargar el personaje
     LaunchedEffect(name) {
         viewModel.loadCharacterByName(name)
     }
 
-    // Pantalla de carga
+    val bg = MaterialTheme.colorScheme.surfaceContainer         // Fondo más profundo
+    val cardBg = MaterialTheme.colorScheme.surfaceContainerHigh // Fondo tarjeta
+    val onBg = MaterialTheme.colorScheme.onSurface              // Texto principal
+    val outline = MaterialTheme.colorScheme.outlineVariant
+    val primary = MaterialTheme.colorScheme.primary
+    val onPrimary = MaterialTheme.colorScheme.onPrimary
+
+    // Loading
     if (character == null) {
         Box(
-            modifier = Modifier.fillMaxSize().background(Color.Black),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(bg),
             contentAlignment = Alignment.Center
         ) {
-            Text("Cargando personaje...", color = Color.White)
+            Text(
+                "Cargando personaje...",
+                color = onBg
+            )
         }
         return
     }
 
-    // === Diseño de ficha ===
+    // === UI principal ===
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(bg)
             .verticalScroll(rememberScrollState())
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         // Imagen del personaje
         Image(
             painter = painterResource(id = character!!.imageRes),
@@ -62,7 +75,7 @@ fun UserDetailScreen(
             modifier = Modifier
                 .size(240.dp)
                 .clip(RoundedCornerShape(20.dp))
-                .background(Color.DarkGray),
+                .background(cardBg),   // Imagen con fondo coherente
             contentScale = ContentScale.Crop
         )
 
@@ -71,34 +84,70 @@ fun UserDetailScreen(
         // Nombre
         Text(
             text = character!!.name,
-            color = Color.White,
+            color = onBg,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold
         )
 
         Divider(
-            color = Color(0xFF444444),
+            color = outline,
             thickness = 1.dp,
             modifier = Modifier.padding(vertical = 10.dp)
         )
 
-        // Datos personales
-        InfoRow(label = "Edad", value = "${character!!.age}")
-        InfoRow(label = "Origen", value = character!!.origin)
-        InfoRow(label = "Poder", value = character!!.power)
-        InfoRow(label = "Objetivo", value = character!!.goal)
+        // Datos
+        InfoRow(label = "Edad", value = "${character!!.age}", textColor = onBg)
+        InfoRow(label = "Origen", value = character!!.origin, textColor = onBg)
+        InfoRow(label = "Poder", value = character!!.power, textColor = onBg)
+        InfoRow(label = "Objetivo", value = character!!.goal, textColor = onBg)
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // Botón volver
+        // Botón volver (con primary para que se vea)
         Button(
             onClick = { navController.popBackStack() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2C2C2C)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = primary,
+                contentColor = onPrimary
+            ),
             modifier = Modifier.fillMaxWidth(0.6f)
         ) {
-            Text("⬅ Volver", color = Color.White, fontSize = 16.sp)
+            Text(
+                "⬅ Volver",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
+}
+
+@Composable
+private fun InfoRow(label: String, value: String, textColor: Color) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+    ) {
+        Text(
+            text = label,
+            color = textColor.copy(alpha = 0.7f),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Text(
+            text = value,
+            color = textColor,
+            fontSize = 16.sp,
+            lineHeight = 20.sp
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserDetailScreenPreview() {
+    UserDetailScreen(name = "Hisoka Morow", navController = rememberNavController())
 }
 
 @Composable
@@ -110,21 +159,17 @@ private fun InfoRow(label: String, value: String) {
     ) {
         Text(
             text = label,
-            color = Color(0xFFAAAAAA),
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )
+
         Text(
             text = value,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 16.sp,
             lineHeight = 20.sp
         )
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-@Composable
-fun UserDetailScreenPreview() {
-    UserDetailScreen(name = "Hisoka Morow", navController = rememberNavController())
-}
