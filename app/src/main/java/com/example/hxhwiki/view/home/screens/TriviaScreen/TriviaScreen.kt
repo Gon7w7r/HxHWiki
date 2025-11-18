@@ -15,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -172,17 +174,49 @@ fun QuestionScreen(
             enter = fadeIn(tween(500, delayMillis = 400)) +
                     slideInVertically(tween(500, delayMillis = 400))
         ) {
-            Text(
-                text = pregunta.pregunta,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 28.sp
-                ),
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
-            )
+            ) {
+
+                // Pregunta bonita
+                Text(
+                    text = pregunta.pregunta,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 28.sp
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 12.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Imagen en card con bordes + sombra
+                Card(
+                    shape = MaterialTheme.shapes.medium,
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    androidx.compose.foundation.Image(
+                        painter = painterResource(id = pregunta.imagen),
+                        contentDescription = "Imagen de pregunta",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
         }
+
+
+
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -377,7 +411,8 @@ data class TriviaQuestion(
     val nivelColor: Color,
     val pregunta: String,
     val opciones: List<String>,
-    val respuestaCorrecta: Int
+    val respuestaCorrecta: Int,
+    val imagen: Int,
 )
 
 @Preview(showBackground = true)
