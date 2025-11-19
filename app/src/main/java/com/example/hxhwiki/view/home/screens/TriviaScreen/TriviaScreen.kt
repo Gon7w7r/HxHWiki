@@ -1,8 +1,6 @@
 package com.example.hxhwiki.view.home.screens.TriviaScreen
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
@@ -44,6 +42,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.hxhwiki.R
+import com.example.hxhwiki.utils.SoundManager
+import com.example.hxhwiki.utils.rememberSoundManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,6 +53,7 @@ fun TriviaScreen(
     viewModel: TriviaViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val soundManager = rememberSoundManager() // ← AGREGADO
 
     Scaffold(
         containerColor = Color(0xFF0D260D),
@@ -93,10 +95,18 @@ fun TriviaScreen(
         ) {
             when {
                 uiState.showResults -> {
+                    // REPRODUCIR SONIDO CUANDO SE MUESTRAN RESULTADOS ← AGREGADO
+                    LaunchedEffect(uiState.showResults) {
+                        if (uiState.showResults) {
+                            soundManager.playSound(R.raw.triviacompletada)
+                        }
+                    }
                     ResultScreen(
                         puntaje = uiState.score,
                         totalPreguntas = uiState.questions.size,
-                        onRestart = { viewModel.restartGame() },
+                        onRestart = {
+                            viewModel.restartGame()
+                        },
                         onExit = {
                             viewModel.exitGame()
                             navController.popBackStack()
@@ -110,7 +120,8 @@ fun TriviaScreen(
                         totalQuestions = uiState.questions.size,
                         onAnswerSelected = { selectedAnswer ->
                             viewModel.selectAnswer(selectedAnswer)
-                        }
+                        },
+                        soundManager = soundManager
                     )
                 }
                 else -> {
@@ -132,7 +143,8 @@ fun QuestionScreen(
     pregunta: TriviaQuestion,
     questionNumber: Int,
     totalQuestions: Int,
-    onAnswerSelected: (Int) -> Unit
+    onAnswerSelected: (Int) -> Unit,
+    soundManager: SoundManager
 ) {
     var isVisible by remember { mutableStateOf(false) }
 
@@ -233,7 +245,10 @@ fun QuestionScreen(
                         )
             ) {
                 Button(
-                    onClick = { onAnswerSelected(index) },
+                    onClick = {
+                        soundManager.playSound(R.raw.click) // ← AGREGA ESTA LÍNEA
+                        onAnswerSelected(index)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
@@ -403,8 +418,6 @@ fun ResultScreen(
         }
     }
 }
-
-
 
 data class TriviaQuestion(
     val nivel: String,
