@@ -26,6 +26,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.hxhwiki.R // ← AGREGAR ESTE IMPORT
+import com.example.hxhwiki.utils.SoundManager
+import com.example.hxhwiki.utils.rememberSoundManager // ← AGREGAR ESTE IMPORT
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +37,7 @@ fun TriviaScreen(
     viewModel: TriviaViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val soundManager = rememberSoundManager() // ← AGREGAR ESTO
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -70,6 +74,12 @@ fun TriviaScreen(
         ) {
             when {
                 uiState.showResults -> {
+                    // SONIDO AL COMPLETAR TRIVIA ← AGREGAR ESTO
+                    LaunchedEffect(uiState.showResults) {
+                        if (uiState.showResults) {
+                            soundManager.playSound(R.raw.triviacompletada)
+                        }
+                    }
                     ResultScreen(
                         puntaje = uiState.score,
                         totalPreguntas = uiState.questions.size,
@@ -87,7 +97,8 @@ fun TriviaScreen(
                         totalQuestions = uiState.questions.size,
                         onAnswerSelected = { selectedAnswer ->
                             viewModel.selectAnswer(selectedAnswer)
-                        }
+                        },
+                        soundManager = soundManager // ← AGREGAR ESTO
                     )
                 }
                 else -> {
@@ -108,7 +119,8 @@ fun QuestionScreen(
     pregunta: TriviaQuestion,
     questionNumber: Int,
     totalQuestions: Int,
-    onAnswerSelected: (Int) -> Unit
+    onAnswerSelected: (Int) -> Unit,
+    soundManager: SoundManager // ← AGREGAR ESTE PARÁMETRO
 ) {
     var isVisible by remember { mutableStateOf(false) }
 
@@ -215,11 +227,7 @@ fun QuestionScreen(
             }
         }
 
-
-
-
         Spacer(modifier = Modifier.height(32.dp))
-
 
         val optionColors = listOf(
             Color(0xFF4CAF50) to Color.White,  // Verde
@@ -227,7 +235,6 @@ fun QuestionScreen(
             Color(0xFFFF9800) to Color.White,  // Naranjo
             Color(0xFFF44336) to Color.White   // Rojo
         )
-
 
         // Opciones
         pregunta.opciones.forEachIndexed { index, opcion ->
@@ -242,7 +249,10 @@ fun QuestionScreen(
                         )
             ) {
                 Button(
-                    onClick = { onAnswerSelected(index) },
+                    onClick = {
+                        soundManager.playSound(R.raw.click) // ← SONIDO AL APRETAR OPCIÓN
+                        onAnswerSelected(index)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
