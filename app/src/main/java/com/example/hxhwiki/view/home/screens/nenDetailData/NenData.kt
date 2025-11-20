@@ -18,7 +18,7 @@ object NenData {
     val nenTypes = listOf(
         NenType(
             title = "Enhancement",
-            description = "Los Enhancers fortalecen sus habilidades físicas y ataques. Se caracterizan por su determinación y espíritu.",
+            description = "Los Enhancers o potenciadores tienen la habilidad de usar el aura para incrementar las habilidades de un objeto o el propio cuerpo. Por lo tanto, los potenciadores son capaces de aumentar en gran medida su ataque físico y defensa, y son los más adecuados para el combate cuerpo a cuerpo.",
             users = listOf(
                 NenUser("Gon Freecss", R.drawable.gonactual),
                 NenUser("Uvogin", R.drawable.uvogin),
@@ -36,7 +36,7 @@ object NenData {
         ),
         NenType(
             title = "Emission",
-            description = "Los Emmiters proyectan su aura a distancia. Son impulsivos y enérgicos.",
+            description = "Los Emmiters o emisores les resulta más fácil separar su aura de su cuerpo. Debido a sus propiedades, la Emisión se emplea típicamente en habilidades con énfasis en el alcance y/o aquellas que tienen efectos duraderos. Las aplicaciones básicas incluyen disparar proyectiles o rayos de aura a alta velocidad.",
             users = listOf(
                 NenUser("Leorio Paradinight", R.drawable.leorio),
                 NenUser("Razor", R.drawable.razor),
@@ -55,7 +55,7 @@ object NenData {
         ),
         NenType(
             title = "Transmutation",
-            description = "Los Transmuters cambian la naturaleza de su aura. Son impredecibles y creativos.",
+            description = "Los Transmuters o transmutadors pueden cambiar las propiedades de su aura para imitar algo diferente o replicar atributos específicos. El aura transmutada puede adoptar las propiedades de elementos naturales, sustancias artificiales e incluso animales, entre otras cosas.",
             users = listOf(
                 NenUser("Killua Zoldyck", R.drawable.killua),
                 NenUser("Hisoka Morow", R.drawable.hisoka),
@@ -72,7 +72,7 @@ object NenData {
         ),
         NenType(
             title = "Manipulation",
-            description = "Los Manipulators controlan objetos o personas con su aura. Son calculadores y metódicos.",
+            description = "Los Manipulators o manipuladores pueden controlar seres vivos e inertes, incluyendo construcciones de aura. La principal ventaja de esta categoría en combate es la capacidad de manipular al propio enemigo.",
             users = listOf(
                 NenUser("Shalnark", R.drawable.shalnark),
                 NenUser("Zushi", R.drawable.zushi) ,
@@ -92,7 +92,7 @@ object NenData {
         ),
         NenType(
             title = "Conjuration",
-            description = "Los Conjurers crean objetos a partir de su aura. Son perfeccionistas y racionales.",
+            description = "Los Conjurers o conjuradores, crean objetos a partir de su aura. Son perfeccionistas y racionales. En la mayoría de los casos, la Conjuración implica la creación de un objeto físico, independiente y material a partir del aura.",
             users = listOf(
                 NenUser("Kurapika", R.drawable.kurapika),
                 NenUser("Kortopi", R.drawable.kortopi),
@@ -110,7 +110,7 @@ object NenData {
         ),
         NenType(
             title = "Specialization",
-            description = "Los Specialists poseen habilidades únicas e impredecibles. No se ajustan a ninguna categoría.",
+            description = "Los Specialists o especicalistas, en términos generales, poseen cualquier habilidad que no pertenezca a ninguna de las otras cinco categorías, lo que la convierte en el tipo de Nen más impreciso. También parece ser el más raro. los Especialistas no están limitados por afinidades como otros usuarios de Nen, por lo que pueden combinar múltiples tipos de Nen.",
             users = listOf(
                 NenUser("Neon Nostrade", R.drawable.neon),
                 NenUser("Chrollo Lucilfer", R.drawable.chrollo),
