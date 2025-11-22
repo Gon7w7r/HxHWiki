@@ -74,7 +74,7 @@ class TriviaViewModel : ViewModel() {
             nivelColor = Color(0xFFF44336),
             pregunta = "¿Qué jugador de Greed Island tiene la habilidad \"Little Flower\" (Pequeña Flor)?",
             opciones = listOf("Genthru", "Tsezguerra", "Binolt", "Bara"),
-            respuestaCorrecta = 3,
+            respuestaCorrecta = 0,
             imagen = R.drawable.pregunta7
         ),
         TriviaQuestion(
@@ -97,8 +97,8 @@ class TriviaViewModel : ViewModel() {
             nivel = "LEYENDA",
             nivelColor = Color(0xFF9C27B0),
             pregunta = "¿Qué número tenía el participante Hanzo durante el examen de cazador?",
-            opciones = listOf("94", "295", "255", "103"),
-            respuestaCorrecta = 3,
+            opciones = listOf("94", "294", "255", "103"),
+            respuestaCorrecta = 1,
             imagen = R.drawable.pregunta10
         ),
         TriviaQuestion(
@@ -117,12 +117,12 @@ class TriviaViewModel : ViewModel() {
         TriviaQuestion(
             nivel = "LEYENDA",
             nivelColor = Color(0xFF9C27B0),
-            pregunta = "¿Qué cartel aparece en la torre cuando Gon y Killua suben al piso 200 por primera vez?",
+            pregunta = "¿Qué personaje impide el paso a Gon y Killua cuando suben al piso 200 por primera vez?",
             opciones = listOf(
-                "¡Felicitaciones, combatientes!",
-                "Prohibido entrar sin Nen",
-                "Son débiles, vuelvan más tarde",
-                "Inscripción cerrada hasta las 18:00"
+                "Chrollo",
+                "Hisoka",
+                "Kurapika",
+                "Genthru"
             ),
             respuestaCorrecta = 1,
             imagen = R.drawable.pregunta12
