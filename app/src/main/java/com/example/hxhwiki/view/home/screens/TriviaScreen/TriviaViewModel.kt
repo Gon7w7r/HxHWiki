@@ -80,8 +80,8 @@ class TriviaViewModel : ViewModel() {
         TriviaQuestion(
             nivel = "DIFÍCIL",
             nivelColor = Color(0xFFF44336),
-            pregunta = "¿Qué habilidad usa Knuckle para dejar inconsciente a sus enemigos?",
-            opciones = listOf("APR (Amortizing Power Redirector)", "Nen Hook", "Interest Rush", "Godspeed"),
+            pregunta = "¿Cuál es la habilidad principal de Knuckle?",
+            opciones = listOf("Hakoware", "Nen Hook", "Interest Rush", "Godspeed"),
             respuestaCorrecta = 0,
             imagen = R.drawable.pregunta8
         ),
